@@ -13,7 +13,7 @@ class PostDashboardController extends Controller
      */
     public function index()
     {
-        return view('dashboard', ['posts'=>Post::latest()->get()]);
+        return view('dashboard', ['posts'=>Post::latest()->paginate(7)]);
     }
 
     /**

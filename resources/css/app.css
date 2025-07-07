@@ -10,6 +10,7 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 @source "../../node_modules/flowbite";
+@source "../node_modules/flowbite";
 
 @theme {
     --color-primary-50: #eff6ff;
