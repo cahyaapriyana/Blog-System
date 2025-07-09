@@ -22,6 +22,11 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
+                        <div class="flex items-center px-5">
+                            <div class="shrink-0">
+                              <img class="size-10 rounded-full" src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('img/default-profile.png') }}" alt="{{ Auth::user()->name }}" />
+                            </div>
+                           
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-hidden transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name }}</div>
 
@@ -31,6 +36,7 @@
                                 </svg>
                             </div>
                         </button>
+                        </div>
                     </x-slot>
 
                     <x-slot name="content">
@@ -60,6 +66,7 @@
                         <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
+           
             </div>
         </div>
     </div>
@@ -74,11 +81,16 @@
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
+            <div class="flex items-center px-5">
+                <div class="shrink-0">
+                  <img class="size-10 rounded-full" src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('img/default-profile.png') }}" alt="{{ Auth::user()->name }}" />
+                </div>
             <div class="px-4">
+                
                 <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
             </div>
-
+            </div>
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
