@@ -37,17 +37,9 @@ class PostDashboardController extends Controller
         return view('dashboard.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request)
     {
-    //   //validation
-    //   $request->validate([
-    //         'title' =>'required|unique:posts|min:4|max:255',
-    //         'category_id' => 'required',
-    //         'body' => 'required'
-    //   ]);
 
 
     Validator::make($request->all(), [
@@ -80,35 +72,47 @@ class PostDashboardController extends Controller
        return redirect('/dashboard')->with(['success' =>'Your post has been saved!']);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(Post $post)
     {
         return view ('dashboard.show', ['post' => $post]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+ 
+    public function edit(Post $post)
     {
-        //
+        return view('dashboard.edit', ['post' => $post]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+   
+    public function update(Request $request, Post $post)
     {
-        //
+  
+   
+      $request->validate([
+            'title' =>'required|min:4|max:255|unique:posts,title' . $post->id,
+            'category_id' => 'required',
+            'body' => 'required'
+      ]);
+
+
+      
+      $post->update([
+        'title' => $request->title,
+        'author_id' => Auth::user()->id,
+        'category_id' => $request->category_id,
+        'slug' => Str::slug($request->title),
+        'body' => $request->body
+      ]);
+
+
+        return redirect('/dashboard')->with(['success' =>'Your post has been updated!']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+
+    public function destroy(Post $post)
     {
-        //
+       $post->delete();
+       return redirect('/dashboard')->with(['success' =>'Your post has been removed!']);
     }
 }
