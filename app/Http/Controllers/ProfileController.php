@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\ProfileUpdateRequest;
 
 
 class ProfileController extends Controller
@@ -38,12 +39,25 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
-        if ($request->hasFile('avatar')) {
-            if(!empty($request->user()->avatar)){
+        // if ($request->hasFile('avatar')) {
+        //     if(!empty($request->user()->avatar)){
+        //         Storage::disk('public')->delete($request->user()->avatar);
+        //     }
+        //    $path =  $request->file('avatar')->store('img', 'public');
+        //     $validated['avatar'] = $path;
+        // }
+
+
+        if ($request->avatar) {
+                 if(!empty($request->user()->avatar)){
                 Storage::disk('public')->delete($request->user()->avatar);
             }
-           $path =  $request->file('avatar')->store('img', 'public');
-            $validated['avatar'] = $path;
+
+            
+            $newFileName = Str::after($request->avatar, 'tmp/');
+            Storage::disk('public')->move($request->avatar, "img/$newFileName");
+
+            $validated['avatar'] = "img/$newFileName";
         }
 
         $request->user()->update($validated);
@@ -51,6 +65,14 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
+
+    public function upload(Request $request)
+    {
+        if ($request->hasFile('avatar')) {
+          $path = $request->file('avatar')->store('tmp', 'public');
+        }
+        return $path;
+    }
     /**
      * Delete the user's account.
      */

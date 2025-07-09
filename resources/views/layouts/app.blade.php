@@ -13,6 +13,8 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        {{-- Stack Style --}}
+        @stack('style')
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
@@ -34,5 +36,7 @@
         </div>
         <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
         <script src="https://unpkg.com/flowbite@1.6.5/dist/flowbite.min.js"></script>
+        {{-- Stack JavaScript --}}
+        @stack('script')
     </body>
 </html>
