@@ -17,7 +17,7 @@
         @stack('style')
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen bg-gray-100 flex flex-col">
             @include('layouts.navigation')
 
             <!-- Flash Messages -->
@@ -57,9 +57,23 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            <main class="flex-1">
                 {{ $slot }}
             </main>
+
+            <!-- Footer -->
+            <footer class="bg-gray-900 border-t-4 border-indigo-600 mt-16">
+                <div class="max-w-5xl mx-auto px-4 py-10 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="text-gray-200 text-sm text-center md:text-left">
+                        &copy; {{ date('Y') }} <span class="font-semibold text-indigo-400">BlogSystem</span>. All rights reserved.
+                    </div>
+                    <div class="flex gap-6 text-sm justify-center md:justify-end">
+                        <a href="/about" class="text-gray-300 hover:text-indigo-400 transition">About</a>
+                        <a href="/contact" class="text-gray-300 hover:text-indigo-400 transition">Contact</a>
+                        <a href="https://github.com/cahyaapriyana" target="_blank" class="text-gray-300 hover:text-indigo-400 transition">GitHub</a>
+                    </div>
+                </div>
+            </footer>
         </div>
         <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
         <script src="https://unpkg.com/flowbite@1.6.5/dist/flowbite.min.js"></script>

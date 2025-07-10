@@ -28,6 +28,11 @@
                 </div>
             </div>
 
+            @if($post->thumbnail)
+                <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="Thumbnail" class="w-full h-72 object-cover rounded-xl mb-8 shadow">
+            @else
+                <img src="https://placehold.co/800x400?text=No+Image" alt="No Thumbnail" class="w-full h-72 object-cover rounded-xl mb-8 shadow">
+            @endif
             <!-- Title -->
             <h1 class="text-4xl font-extrabold leading-tight text-gray-900 dark:text-white mb-6 tracking-tight">{{ $post['title'] }}</h1>
 
@@ -38,11 +43,45 @@
             <div class="prose prose-lg max-w-none text-gray-800 dark:prose-invert dark:text-gray-200 leading-relaxed">
                 {!! $post['body'] !!}
             </div>
+
+            <!-- Related Posts -->
+            @php
+                $relatedPosts = \App\Models\Post::where('category_id', $post->category_id)
+                    ->where('id', '!=', $post->id)
+                    ->latest()
+                    ->take(3)
+                    ->get();
+            @endphp
+            @if($relatedPosts->count())
+            <div class="mt-16">
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Related Posts</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    @foreach($relatedPosts as $related)
+                        <a href="/posts/{{ $related->slug }}" class="block bg-gray-50 dark:bg-gray-800 rounded-xl shadow border border-gray-100 dark:border-gray-700 p-4 hover:shadow-lg transition">
+                            @if($related->thumbnail)
+                                <img src="{{ asset('storage/' . $related->thumbnail) }}" alt="Thumbnail" class="w-full h-32 object-cover rounded-lg mb-3 shadow">
+                            @else
+                                <img src="https://placehold.co/400x200?text=No+Image" alt="No Thumbnail" class="w-full h-32 object-cover rounded-lg mb-3 shadow">
+                            @endif
+                            <div class="text-sm text-gray-500 mb-1">{{ $related->created_at->format('d M Y') }}</div>
+                            <div class="font-semibold text-gray-900 dark:text-white line-clamp-2 mb-1">{{ $related->title }}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-300 line-clamp-2">{{ strip_tags(Str::limit($related->body, 60)) }}</div>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+            @endif
         </article>
 
         <!-- Comments Section -->
-        <div class="mt-12">
-            <x-comments :post="$post" />
+        <div class="mt-12" x-data="{ open: false }">
+            <button @click="open = !open" class="px-6 py-2 rounded-lg bg-indigo-600 text-white font-semibold shadow hover:bg-indigo-700 transition mb-4">
+                <span x-show="!open">Lihat Komentar</span>
+                <span x-show="open">Sembunyikan Komentar</span>
+            </button>
+            <div x-show="open" x-transition>
+                <x-comments :post="$post" />
+            </div>
         </div>
     </div>
 </main>

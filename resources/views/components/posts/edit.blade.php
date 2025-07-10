@@ -10,7 +10,7 @@
 
     </div>
 
-    <form action="/dashboard/{{ $post->slug }}" method="POST" id="post-form">
+    <form action="/dashboard/{{ $post->slug }}" method="POST" id="post-form" enctype="multipart/form-data">
         @csrf
         @method('PATCH')
             <div class="mb-4">
@@ -30,6 +30,17 @@
                   
             </select>
             @error('category_id') <p class=" mt-2 text-xs text-red-600 dark:text-red-500 "> {{ $message }} @enderror
+            </div>
+
+            <div class="mb-4">
+                <label for="thumbnail" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thumbnail (Gambar Utama)</label>
+                @if($post->thumbnail)
+                    <div class="mb-2">
+                        <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="Thumbnail" class="h-32 rounded-lg shadow border">
+                    </div>
+                @endif
+                <input type="file" name="thumbnail" id="thumbnail" accept="image/*" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+                @error('thumbnail') <p class="mt-2 text-xs text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
             </div>
             <div class="mb-4"><label for="body" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Body</label>
                 <textarea id="body" name="body" rows="4" class="hidden @error('body') bg-red-50 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 @enderror block p-2.5 w-full text-sm text-gray-900  rounded-lg border  focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Write post body here">{{ old('body') ?? $post->body }}

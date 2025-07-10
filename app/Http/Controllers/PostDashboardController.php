@@ -45,21 +45,31 @@ class PostDashboardController extends Controller
     Validator::make($request->all(), [
         'title' =>'required|unique:posts|min:4|max:255',
         'category_id' => 'required',
-        'body' => 'required|min:20'
+        'body' => 'required|min:20',
+        'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
 
     ], [
         'title.required' => 'Field :attribute  harus diisi!',
         'category_id.required' => 'Pilih salah satu kategori!',
         'body.required' => ':attribute tidak boleh kosong!',
         'body.min' => ':attribute harus :min karakter atau lebih!',
+        'thumbnail.image' => 'File harus berupa gambar!',
+        'thumbnail.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau svg!',
+        'thumbnail.max' => 'Ukuran gambar maksimal 2MB!'
     ],[
 
         'title' =>'Judul',
         'category_id' => 'Kategori',
         'body' => 'Tulisan',
+        'thumbnail' => 'Gambar Utama',
     ]
     
     )->validate();
+
+      $thumbnailPath = null;
+      if ($request->hasFile('thumbnail')) {
+          $thumbnailPath = $request->file('thumbnail')->store('thumbnails', 'public');
+      }
 
        Post::create([
         'title' => $request->title,
@@ -67,7 +77,7 @@ class PostDashboardController extends Controller
         'category_id' => $request->category_id,
         'slug' => Str::slug($request->title),
         'body' => $request->body
-
+        ,'thumbnail' => $thumbnailPath
 
        ]);
        return redirect('/dashboard')->with(['success' =>'Your post has been saved!']);
@@ -93,18 +103,21 @@ class PostDashboardController extends Controller
       $request->validate([
             'title' =>'required|min:4|max:255|unique:posts,title' . $post->id,
             'category_id' => 'required',
-            'body' => 'required'
+            'body' => 'required',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
       ]);
 
-
-      
-      $post->update([
+      $data = [
         'title' => $request->title,
         'author_id' => Auth::user()->id,
         'category_id' => $request->category_id,
         'slug' => Str::slug($request->title),
         'body' => $request->body
-      ]);
+      ];
+      if ($request->hasFile('thumbnail')) {
+          $data['thumbnail'] = $request->file('thumbnail')->store('thumbnails', 'public');
+      }
+      $post->update($data);
 
 
         return redirect('/dashboard')->with(['success' =>'Your post has been updated!']);

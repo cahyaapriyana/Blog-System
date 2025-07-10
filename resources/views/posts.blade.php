@@ -29,6 +29,11 @@
           <div class="mt-4 grid gap-8 lg:grid-cols-3 md:grid-cols-2">
             @forelse ($posts as $post)
               <article class="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                @if($post->thumbnail)
+                    <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="Thumbnail" class="w-full h-40 object-cover rounded-lg mb-4 shadow">
+                @else
+                    <img src="https://placehold.co/400x200?text=No+Image" alt="No Thumbnail" class="w-full h-40 object-cover rounded-lg mb-4 shadow">
+                @endif
                   <div class="flex justify-between items-center mb-5 text-gray-500">
                      <a href="/posts?category={{ $post->category->slug }}"> 
                       <span class="{{ $post->category->color }} text-grey-600 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-primary-200 dark:text-primary-800">

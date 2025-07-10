@@ -13,6 +13,11 @@
     @if($featured)
     <section class="max-w-4xl mx-auto px-4 mb-12">
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 flex flex-col gap-8 border border-gray-100 dark:border-gray-700">
+            @if($featured->thumbnail)
+                <img src="{{ asset('storage/' . $featured->thumbnail) }}" alt="Thumbnail" class="w-full h-64 object-cover rounded-xl mb-6 shadow">
+            @else
+                <img src="https://placehold.co/600x300?text=No+Image" alt="No Thumbnail" class="w-full h-64 object-cover rounded-xl mb-6 shadow">
+            @endif
             <div class="flex-1">
                 <a href="/posts/{{ $featured->slug }}" class="block mb-2">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white hover:underline mb-2">{{ $featured->title }}</h2>
@@ -35,6 +40,11 @@
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach(\App\Models\Post::latest()->take(6)->get() as $post)
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-100 dark:border-gray-700 p-5 flex flex-col">
+                    @if($post->thumbnail)
+                        <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="Thumbnail" class="w-full h-40 object-cover rounded-lg mb-3 shadow">
+                    @else
+                        <img src="https://placehold.co/400x200?text=No+Image" alt="No Thumbnail" class="w-full h-40 object-cover rounded-lg mb-3 shadow">
+                    @endif
                     <a href="/posts/{{ $post->slug }}" class="block mb-2">
                         <h4 class="text-lg font-bold text-gray-900 dark:text-white hover:underline mb-1 line-clamp-2">{{ $post->title }}</h4>
                     </a>
