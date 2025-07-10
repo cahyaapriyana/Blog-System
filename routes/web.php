@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PostDashboardController;
+use App\Http\Controllers\CommentController;
 use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
@@ -23,7 +24,7 @@ Route::get('/posts', function () {
 
 Route::get('/posts/{post:slug}', function(Post $post){
 
-       return view('post', ['title' => 'Single Post', 'post' => $post]);
+       return view('post', ['title' => '', 'post' => $post]);
 
 } );
 
@@ -37,6 +38,12 @@ Route::get('/contact', function () {
     return view('contact' , ['title'=>'Contact']);
 });
 
+// Comment routes
+Route::middleware('auth')->group(function () {
+    Route::post('/posts/{post:slug}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::post('/comments/{comment}/reply', [CommentController::class, 'reply'])->name('comments.reply');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+});
 
 Route::middleware(['auth', 'verified'])->group(function(){
     Route::get('/dashboard', [PostDashboardController::class, 'index'])->name('dashboard');

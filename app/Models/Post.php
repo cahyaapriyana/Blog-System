@@ -27,6 +27,16 @@ class Post extends Model
         return $this->belongsto(Category::class);
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class)->approved()->topLevel()->with('replies.user');
+    }
+
+    public function allComments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function scopeFilter(Builder $query, array $filters): void
     {
         $query->when( $filters['search'] ?? false, function($query, $search) {
