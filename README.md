@@ -122,5 +122,3 @@ The application comes with sample data:
     -   Web Programming (Blue)
 
 -   **Sample Posts**: 30 posts with random content
-
-## 📁 Project Structure
